@@ -1,0 +1,5 @@
+Almost all projects eventually come into a phase where more functionality or features is/are required. Depending on the nature of the requirement one may decide how to implement it. This can be an addition to the existing code-base, where more core-functionality can be added, but this can also be a separate module that needs to communicate with, or is depending on, the core code-base. Again, depending on the nature of the requirement there are a lot of choices to be made.
+
+In this paper we focus on using the concepts of Aspect Oriented Programming (AOP) to help making decisions about the implementation of certain requirements. As a case-study we use the requirement of an API on top of an existing code-base.
+
+An API is a typical separate module next to a core code-base since it does not add extra functionality to the existing system, it rather adds the ability to make the exact same system more operable, more programmable and more flexible.
