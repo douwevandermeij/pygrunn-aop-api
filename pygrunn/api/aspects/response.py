@@ -1,6 +1,5 @@
 import json
 from lxml import etree
-from django.http import HttpResponse
 
 
 def xml_write_value(val):
@@ -16,8 +15,7 @@ def xml_write_value(val):
     result = etree.Element('result')
     result.text = str(val).decode('utf-8')
 
-    response = HttpResponse(etree.tostring(result), 'application/xml')
-    response['Cache-Control'] = 'no-cache'
+    response = (etree.tostring(result), 200, 'application/xml')
     return response
 
 
@@ -32,22 +30,21 @@ def json_write_value(val):
     HttpResponse object containing values the client requests in a JSON representation with the mimetype
     'application/json'.
     """
-    response = HttpResponse(json.dumps(val), 'application/json')
-    response['Cache-Control'] = 'no-cache'
+    response = (json.dumps(val), 200, 'application/json')
     return response
 
 
 def response(function):
-    def advice(request, format, *args, **kwargs):
+    def advice(format, *args, **kwargs):
         if not format in ['html', 'xml', 'json']:
             # raise an error if the format specified is not supported
             raise Exception('The format "{0}" is not supported'.format(format))
 
-        ret = function(request, *args, **kwargs)
+        ret = function(*args, **kwargs)
 
         # post-process the result of the function to be decorated by formatting the response
         if format == 'html':
-            return HttpResponse(ret)
+            return ret
         elif format == 'xml':
             return xml_write_value(ret)
         elif format == 'json':

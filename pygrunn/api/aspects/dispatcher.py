@@ -1,6 +1,6 @@
-from pygrunn.api.lib import extract
-from pygrunn.core.login import create_token
-from pygrunn.core.logic.calculations import add, sub, mult, div, something_cool
+from api.lib import extract
+from core.login import create_token
+from core.logic.calculations import add, sub, mult, div, something_cool
 
 
 MAPPING = {
@@ -23,11 +23,12 @@ def specific_dispatch(specific_function_name):
 
 
 def dispatcher(function):
-    def advice(request, *args, **kwargs):
+    def advice(*args, **kwargs):
+        from flask import request
         if 'function' in kwargs:
             if kwargs['function'] in MAPPING:
                 core_function, params = MAPPING[kwargs['function']]
-                kwargs.update(extract(params, request.GET))
+                kwargs.update(extract(params, request.args))
                 return function(proxy=core_function, params=params, *args, **kwargs)
             raise Exception('Function "{0}" is not an API function'.format(kwargs['function']))
         raise Exception('Parameter "function" not provided')

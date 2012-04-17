@@ -1,12 +1,13 @@
 
 def security(function):
-    def advice(request, *args, **kwargs):
+    def advicee(*args, **kwargs):
         """
         Check if the token is (still) valid
         Check if the number of API calls has not exceeded the maximum
         """
         # TODO: make checks as stated above
-        if 'token' in request.GET and request.GET['token'] == 'abc':
-            return function(request, *args, **kwargs)
+        from flask import request
+        if 'token' in request.args and request.args['token'] == 'abc':
+            return function(*args, **kwargs)
         raise Exception('No valid token provided')
-    return advice
+    return advicee
